@@ -7,10 +7,7 @@ from extract import extract
 def validate(df: DataFrame):
     df_with_validated_date = df.withColumn(
         "date",
-        F.coalesce(
-            F.to_date("OrderDate", "yyyy-MM-dd"),
-            F.to_date("OrderDate", "M/d/yyyy"),
-        ),
+        F.to_date("OrderDate", "yyyy-MM-dd"),
     )
 
     is_valid = (
@@ -49,12 +46,10 @@ def main() -> None:
         df = extract(spark)
         valid, rejected_records = validate(df)
 
-        print("Summary report :")
         print(f"Valid records   : {valid.count()}")
         print(f"Invalid records : {rejected_records.count()}")
 
         transformed_df = transform(valid)
-        transformed_df.show(5)
     finally:
         spark.stop()
 
